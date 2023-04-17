@@ -53,7 +53,11 @@ export async function PATCH(request: NextRequest, {params:{id}}:Props) {
         }
       )}
     const {customerName} : Partial<Order> = await request.json();
-
+    if(!customerName)    {
+      return new NextResponse(JSON.stringify({
+          "message":"Missing required Data!",
+      }));
+  }
     let query = `UPDATE orders SET customerName = '${customerName}', modifiedat=CURRENT_TIMESTAMP where id = '${id}' RETURNING id`;
     console.log(query)
     const result = await conn.unsafe(query);
