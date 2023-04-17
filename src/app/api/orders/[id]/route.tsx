@@ -86,7 +86,8 @@ export async function DELETE(request: NextRequest, {params:{id}}:Props) {
         }
       )}
 
-    const result = await conn.unsafe(`DELETE from orders where id = '${id}' Returning id`);
+    const result = await conn.unsafe(`DELETE from orders where id = '${id}' Returning id;
+    update books set is_available = true`);
 
     console.log(result)
     if(result.length > 0){
