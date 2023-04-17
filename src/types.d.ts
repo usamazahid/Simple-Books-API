@@ -12,5 +12,5 @@ type Client = {
 
 type Order = {
     bookId:number,
-    clientName:string,
+    customerName:string,
 }

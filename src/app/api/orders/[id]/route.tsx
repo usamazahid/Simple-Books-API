@@ -52,9 +52,9 @@ export async function PATCH(request: NextRequest, {params:{id}}:Props) {
     
         }
       )}
-    const {clientName} : Partial<Client> = await request.json();
+    const {customerName} : Partial<Order> = await request.json();
 
-    let query = `UPDATE orders SET clientName = '${clientName}', modifiedat=CURRENT_TIMESTAMP where id = '${id}' RETURNING id`;
+    let query = `UPDATE orders SET customerName = '${customerName}', modifiedat=CURRENT_TIMESTAMP where id = '${id}' RETURNING id`;
     console.log(query)
     const result = await conn.unsafe(query);
 

@@ -22,8 +22,8 @@ export async function POST(request: NextRequest) {
         }
       )}
 
-    const {bookId, clientName} : Partial<Order> = await request.json();
-    if(!bookId|| !clientName)    {
+    const {bookId, customerName} : Partial<Order> = await request.json();
+    if(!bookId|| !customerName)    {
         return new NextResponse(JSON.stringify({
             "message":"Missing required Data!",
         }));
@@ -39,7 +39,7 @@ export async function POST(request: NextRequest) {
         }));
     }
 
-    query = `INSERT INTO orders (bookId, clientName) values('${bookId}', '${clientName}') RETURNING id as orderId;
+    query = `INSERT INTO orders (bookId, customerName) values('${bookId}', '${customerName}') RETURNING id as orderId;
     UPDATE books set is_available = false where id = '${bookId}'`;
     console.log(query);
     const result = await conn.unsafe(query);
