@@ -69,6 +69,11 @@ export async function GET(request: NextRequest) {
   console.log(query);
   const result = await conn.unsafe(query);
   console.log(result)
-
-  return new NextResponse(JSON.stringify(result));
+  if(result.length > 0){
+    return new NextResponse(JSON.stringify(result));
+    }else{
+        return new NextResponse(JSON.stringify({
+            "Message":"Could not find Order.",
+        }));
+    }
 }
