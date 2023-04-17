@@ -29,7 +29,13 @@ export async function GET(request: NextRequest, {params:{id}}:Props) {
   
     const result = await conn.unsafe(`SELECT * FROM orders where id = '${id}'`);
     console.log(result)
-    return new NextResponse(JSON.stringify(result));
+    if(result.length > 0){
+        return new NextResponse(JSON.stringify(result));
+        }else{
+            return new NextResponse(JSON.stringify({
+                "Message":"Could not find Order.",
+            }));
+        }
 }
 
 export async function PATCH(request: NextRequest, {params:{id}}:Props) {
@@ -47,13 +53,22 @@ export async function PATCH(request: NextRequest, {params:{id}}:Props) {
         }
       )}
     const {clientName} : Partial<Client> = await request.json();
-    const result = await conn.unsafe(`UPDATE orders SET clientName = '${clientName}' where id = '${id}' RETURNING id`);
+
+    let query = `UPDATE orders SET clientName = '${clientName}', modifiedat=CURRENT_TIMESTAMP where id = '${id}' RETURNING id`;
+    console.log(query)
+    const result = await conn.unsafe(query);
 
     console.log(result)
-    return new NextResponse(JSON.stringify({
-        "Message":"Order Updated Successfully.",
-        "result":result,
-    }));
+    if(result.length > 0){
+        return new NextResponse(JSON.stringify({
+            "Message":"Order Updated Successfully.",
+            "result":result,
+        }));
+        }else{
+            return new NextResponse(JSON.stringify({
+                "Message":"Could not find Order.",
+            }));
+        }
 }
 
 export async function DELETE(request: NextRequest, {params:{id}}:Props) {
@@ -76,12 +91,12 @@ export async function DELETE(request: NextRequest, {params:{id}}:Props) {
     console.log(result)
     if(result.length > 0){
     return new NextResponse(JSON.stringify({
-        "Message":"Order Updated Successfully.",
+        "Message":"Order Deleted Successfully.",
         "result":result,
     }));
     }else{
         return new NextResponse(JSON.stringify({
-            "Message":"Could not found Order.",
+            "Message":"Could not find Order.",
         }));
     }
 }
